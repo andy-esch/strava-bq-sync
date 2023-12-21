@@ -1,5 +1,7 @@
 import json
+
 import pytest
+
 from stravabqsync.domain import StravaActivity
 
 
@@ -18,7 +20,7 @@ def activity_json_2():
 
 
 class TestStravaActivity:
-    def test_strava_activity_id_2(self, activity_json_1):
+    def test_strava_activity_id_1(self, activity_json_1):
         activity = StravaActivity(**activity_json_1)
 
         assert activity.id == 12345678987654321

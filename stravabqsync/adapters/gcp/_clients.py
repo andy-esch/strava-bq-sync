@@ -1,4 +1,5 @@
 import logging
+
 from google.cloud.bigquery import Client, SchemaField, Table
 
 logger = logging.getLogger(__name__)

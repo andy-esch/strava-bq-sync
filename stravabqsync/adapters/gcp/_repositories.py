@@ -1,9 +1,10 @@
 import json
-from stravabqsync.domain import StravaActivity
-from stravabqsync.ports.out.write import WriteActivity
-from stravabqsync.adapters.gcp._clients import BigQueryClientWrapper
 
 from google.cloud.bigquery import SchemaField
+
+from stravabqsync.adapters.gcp._clients import BigQueryClientWrapper
+from stravabqsync.domain import StravaActivity
+from stravabqsync.ports.out.write import WriteActivity
 
 
 class WriteActivityRepo(WriteActivity):

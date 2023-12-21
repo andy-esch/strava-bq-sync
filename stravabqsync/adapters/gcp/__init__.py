@@ -1,8 +1,9 @@
 from functools import lru_cache
+
 from stravabqsync.adapters.gcp._clients import BigQueryClientWrapper
 from stravabqsync.adapters.gcp._repositories import WriteActivityRepo
-from stravabqsync.ports.out.write import WriteActivity
 from stravabqsync.config import app_config
+from stravabqsync.ports.out.write import WriteActivity
 
 
 @lru_cache(maxsize=1)

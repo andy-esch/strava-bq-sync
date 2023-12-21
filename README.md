@@ -26,5 +26,3 @@ You should be able to bootstrap for yourself by running `make bootstrap`.
 1. Provision GCP project?
 2. Create BQ dataset
 3. Create BQ tables with schema
-
-
