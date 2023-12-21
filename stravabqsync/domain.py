@@ -1,7 +1,8 @@
+import json
 from datetime import datetime
 from typing import NamedTuple
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 
 class WebhookRequest(BaseModel):
@@ -120,7 +121,11 @@ class PhotosSummary_primary(BaseModel):
     media_type: int | None = None
     source: int
     unique_id: str
-    urls: dict[str, str]
+    urls: str
+
+    @field_validator("urls", mode="before")
+    def transform_to_json_str(cls, value) -> str:
+        return json.dumps(value)
 
 
 class PhotosSummary(BaseModel):
