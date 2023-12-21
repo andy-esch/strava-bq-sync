@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "strava-bq-sync"
+version = "0.1.0"
+description = ""
+authors = ["Andy Eschbacher <andyesch@protonmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pydantic = "^2.5.2"
+google-cloud-bigquery = "^3.14.1"
+python-dotenv = "^1.0.0"
+requests = "^2.31.0"
+
+[tool.poetry.group.dev.dependencies]
+flake8 = "^6.1.0"
+pytest = "^7.4.3"
+pre-commit = "^3.6.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
