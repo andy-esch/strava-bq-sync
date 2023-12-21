@@ -1,0 +1,5 @@
+functions-framework==3.5.0 ; python_version >= "3.11" and python_version < "4"
+google-cloud-bigquery==3.14.1 ; python_version >= "3.11" and python_version < "4.0"
+pydantic==2.5.2 ; python_version >= "3.11" and python_version < "4.0"
+python-dotenv==1.0.0 ; python_version >= "3.11" and python_version < "4.0"
+requests==2.31.0 ; python_version >= "3.11" and python_version < "4.0"
