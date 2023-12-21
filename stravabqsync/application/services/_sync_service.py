@@ -1,6 +1,6 @@
 from stravabqsync.adapters import Supplier
-from stravabqsync.ports.out.read import ReadActivity
-from stravabqsync.ports.out.write import WriteActivity
+from stravabqsync.ports.out.read import ReadActivities, ReadStravaToken
+from stravabqsync.ports.out.write import WriteActivities
 
 
 class SyncService:
@@ -9,12 +9,14 @@ class SyncService:
 
     def __init__(
         self,
-        read_activity: Supplier[ReadActivity],
-        write_activity: Supplier[WriteActivity],
+        read_strava_token: Supplier[ReadStravaToken],
+        read_activities: Supplier[ReadActivities],
+        write_activities: Supplier[WriteActivities],
     ):
-        self._read_activity = read_activity
-        self._write_activity = write_activity
+        self._tokens = read_strava_token().refresh
+        self._read_activities = read_activities(self._tokens)
+        self._write_activities = write_activities
 
     def run(self, activity_id: int) -> None:
-        activity = self._read_activity().read_activity_by_id(activity_id)
-        self._write_activity().write_activity(activity)
+        activity = self._read_activities.read_activity_by_id(activity_id)
+        self._write_activities().write_activity(activity)

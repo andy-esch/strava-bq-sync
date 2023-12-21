@@ -5,7 +5,7 @@ from abc import ABC, abstractmethod
 from stravabqsync.domain import StravaActivity
 
 
-class WriteActivity(ABC):
+class WriteActivities(ABC):
     @abstractmethod
     def write_activity(self, activity: StravaActivity) -> None:
         """Write Strava activity"""

@@ -17,6 +17,7 @@ class StravaTokenSet(NamedTuple):
 class AppConfig(NamedTuple):
     tokens: StravaTokenSet
     bucket_name: str
+    project_id: str
 
 
 def load_config():
@@ -35,6 +36,7 @@ def load_config():
     app_config = AppConfig(
         tokens=loaded_tokens,
         bucket_name=config["GCP_BUCKET_NAME"],
+        project_id=config["GCP_PROJECT_ID"],
     )
     return app_config
 

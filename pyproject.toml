@@ -11,11 +11,16 @@ pydantic = "^2.5.2"
 google-cloud-bigquery = "^3.14.1"
 python-dotenv = "^1.0.0"
 requests = "^2.31.0"
+functions-framework = "^3.5.0"
 
 [tool.poetry.group.dev.dependencies]
 flake8 = "^6.1.0"
 pytest = "^7.4.3"
 pre-commit = "^3.6.0"
+
+
+[tool.poetry.group.ad-hoc.dependencies]
+tqdm = "^4.66.1"
 
 [build-system]
 requires = ["poetry-core"]

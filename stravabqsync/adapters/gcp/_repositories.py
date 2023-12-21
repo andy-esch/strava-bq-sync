@@ -4,11 +4,11 @@ from google.cloud.bigquery import SchemaField
 
 from stravabqsync.adapters.gcp._clients import BigQueryClientWrapper
 from stravabqsync.domain import StravaActivity
-from stravabqsync.ports.out.write import WriteActivity
+from stravabqsync.ports.out.write import WriteActivities
 
 
-class WriteActivityRepo(WriteActivity):
-    """Write Strava Activity to BigQuery"""
+class WriteActivitiesRepo(WriteActivities):
+    """Write Strava Activities to BigQuery"""
 
     def __init__(self, client: BigQueryClientWrapper):
         self._client = client
@@ -16,12 +16,14 @@ class WriteActivityRepo(WriteActivity):
         self._table_name = "activities"
 
     def write_activity(self, activity: StravaActivity) -> None:
-        activity_dict = [json.loads(activity.model_dump_json())]
+        activities_dict = [json.loads(activity.model_dump_json())]
         self._client.insert_rows_json(
-            activity_dict, dataset_name=self._dataset_name, table_name=self._table_name
+            activities_dict,
+            dataset_name=self._dataset_name,
+            table_name=self._table_name,
         )
 
-    def create_activity_table(self) -> None:
+    def create_activities_table(self) -> None:
         table_id = f"{self._client.project_id}.{self._dataset_name}.{self._table_name}"
 
         # MetaActivity model
