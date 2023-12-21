@@ -24,14 +24,20 @@ class WriteActivityRepo(WriteActivity):
     def create_activity_table(self) -> None:
         table_id = f"{self._client.project_id}.{self._dataset_name}.{self._table_name}"
 
+        # MetaActivity model
+        # https://developers.strava.com/docs/reference/#api-models-MetaActivity
         meta_activity_fields = [
             SchemaField("id", "INTEGER", mode="REQUIRED"),
             SchemaField("resource_state", "INTEGER", mode="REQUIRED"),
         ]
+        # MetaAthlete model
+        # https://developers.strava.com/docs/reference/#api-models-MetaAthlete
         meta_athlete_fields = [
             SchemaField("id", "INTEGER", mode="REQUIRED"),
             SchemaField("resource_state", "INTEGER", mode="REQUIRED"),
         ]
+        # SummarySegment model
+        # https://developers.strava.com/docs/reference/#api-models-SummarySegment
         summary_segment_fields = [
             SchemaField("id", "INTEGER", mode="REQUIRED"),
             SchemaField("resource_state", "INTEGER", mode="REQUIRED"),
@@ -53,7 +59,8 @@ class WriteActivityRepo(WriteActivity):
             SchemaField("starred", "BOOLEAN", mode="REQUIRED"),
         ]
 
-        # DetailedSegmentEffort
+        # DetailedSegmentEffort model
+        # https://developers.strava.com/docs/reference/#api-models-DetailedSegmentEffort
         detailed_segment_effort_fields = [
             SchemaField("id", "INTEGER", mode="REQUIRED"),
             SchemaField("resource_state", "INTEGER", mode="REQUIRED"),
@@ -82,7 +89,8 @@ class WriteActivityRepo(WriteActivity):
             SchemaField("hidden", "BOOLEAN", mode="REQUIRED"),
         ]
 
-        # Split
+        # Split model
+        # https://developers.strava.com/docs/reference/#api-models-Split
         split_fields = [
             SchemaField("distance", "FLOAT", mode="REQUIRED"),
             SchemaField("elapsed_time", "INTEGER", mode="REQUIRED"),
@@ -93,7 +101,8 @@ class WriteActivityRepo(WriteActivity):
             SchemaField("pace_zone", "INTEGER", mode="REQUIRED"),
         ]
 
-        # Lap
+        # Lap model
+        # https://developers.strava.com/docs/reference/#api-models-Lap
         lap_fields = [
             SchemaField("id", "INTEGER", mode="REQUIRED"),
             SchemaField("resource_state", "INTEGER", mode="REQUIRED"),
@@ -121,6 +130,8 @@ class WriteActivityRepo(WriteActivity):
             SchemaField("split", "INTEGER", mode="REQUIRED"),
         ]
 
+        # DetailedActivity model + undocumented (new?) fields
+        # https://developers.strava.com/docs/reference/#api-models-DetailedActivity
         schema = [
             SchemaField("id", "INTEGER", mode="REQUIRED"),
             SchemaField("external_id", "STRING", mode="NULLABLE"),
@@ -234,6 +245,7 @@ class WriteActivityRepo(WriteActivity):
                 mode="REPEATED",
                 fields=detailed_segment_effort_fields,
             ),
+            # Not in DetailedActivity model
             SchemaField("average_cadence", "FLOAT", mode="NULLABLE"),
             SchemaField("has_heartrate", "BOOLEAN", mode="REQUIRED"),
             SchemaField("pr_count", "INTEGER", mode="REQUIRED"),
