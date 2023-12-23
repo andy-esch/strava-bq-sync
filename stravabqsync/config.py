@@ -15,9 +15,17 @@ class StravaTokenSet(NamedTuple):
 
 
 class AppConfig(NamedTuple):
+    """Strava-bq-sync application configuration
+
+    Attributes:
+      tokens: StravaTokenSet
+      project_id: GCP Project ID
+      bq_dataset: GCP BigQuery Dataset where tables will be stored
+    """
+
     tokens: StravaTokenSet
-    bucket_name: str
     project_id: str
+    bq_dataset: str
 
 
 def load_config():
@@ -35,8 +43,8 @@ def load_config():
     )
     app_config = AppConfig(
         tokens=loaded_tokens,
-        bucket_name=config["GCP_BUCKET_NAME"],
         project_id=config["GCP_PROJECT_ID"],
+        bq_dataset=config["GCP_BIGQUERY_DATASET"],
     )
     return app_config
 

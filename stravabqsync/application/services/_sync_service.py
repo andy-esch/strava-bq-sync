@@ -18,5 +18,6 @@ class SyncService:
         self._write_activities = write_activities
 
     def run(self, activity_id: int) -> None:
+        """Sync data for `activity_id` from Strava to BigQuery activities table"""
         activity = self._read_activities.read_activity_by_id(activity_id)
         self._write_activities().write_activity(activity)

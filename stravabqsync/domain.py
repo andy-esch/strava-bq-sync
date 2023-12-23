@@ -69,10 +69,10 @@ class DetailedSegmentEffort(BaseModel):
     average_cadence: float | None = None
     device_watts: bool | None = None
     average_watts: float | None = None
-    segment: SummarySegment
-    kom_rank: int | None
+    segment: SummarySegment | None = None
+    kom_rank: int | None | None = None
     pr_rank: int | None
-    hidden: bool
+    hidden: bool | None = None
 
 
 class Split(BaseModel):

@@ -10,9 +10,9 @@ from stravabqsync.ports.out.write import WriteActivities
 class WriteActivitiesRepo(WriteActivities):
     """Write Strava Activities to BigQuery"""
 
-    def __init__(self, client: BigQueryClientWrapper):
+    def __init__(self, client: BigQueryClientWrapper, *, dataset_name: str):
         self._client = client
-        self._dataset_name = "strava"
+        self._dataset_name = dataset_name
         self._table_name = "activities"
 
     def write_activity(self, activity: StravaActivity) -> None:
@@ -84,11 +84,11 @@ class WriteActivitiesRepo(WriteActivities):
             SchemaField("device_watts", "BOOLEAN", mode="NULLABLE"),
             SchemaField("average_watts", "FLOAT", mode="NULLABLE"),
             SchemaField(
-                "segment", "RECORD", mode="REQUIRED", fields=summary_segment_fields
+                "segment", "RECORD", mode="NULLABLE", fields=summary_segment_fields
             ),
             SchemaField("kom_rank", "INTEGER", mode="NULLABLE"),
             SchemaField("pr_rank", "INTEGER", mode="NULLABLE"),
-            SchemaField("hidden", "BOOLEAN", mode="REQUIRED"),
+            SchemaField("hidden", "BOOLEAN", mode="NULLABLE"),
         ]
 
         # Split model

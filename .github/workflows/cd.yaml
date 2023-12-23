@@ -10,8 +10,8 @@ env:
   STRAVA_CLIENT_ID: 123
   STRAVA_REFRESH_TOKEN: "bar"
   STRAVA_CLIENT_SECRET: "baz"
-  GCP_BUCKET_NAME: "gs://foo"
-  GCP_SUMMARY_ACTIVITIES_PATH: "gs://bar"
+  GCP_PROJECT_ID: "foo-bar-baz"
+  GCP_BIGQUERY_DATASET: "strava"
 
 
 jobs:

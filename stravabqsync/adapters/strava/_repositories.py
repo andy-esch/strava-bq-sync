@@ -1,7 +1,7 @@
 """Strava read repositories"""
-# pylint: disable=too-few-public-methods
 import logging
 from functools import cached_property
+from typing import Any
 
 import requests
 
@@ -49,9 +49,8 @@ class StravaActivitiesRepo(ReadActivities):
         self._activity_endpoint = (
             "https://www.strava.com/api/v3/activities/{activity_id}"
         )
-        self._activities_endpoint = "https://www.strava.com/api/v3/activities"
 
-    def _read_raw_activity_by_id(self, activity_id: int) -> dict:
+    def _read_raw_activity_by_id(self, activity_id: int) -> dict[str, Any]:
         resp = requests.get(
             url=self._activity_endpoint.format(activity_id=activity_id),
             headers=self._headers,
@@ -62,6 +61,10 @@ class StravaActivitiesRepo(ReadActivities):
         return resp.json()
 
     def read_activity_by_id(self, activity_id: int) -> StravaActivity:
+        """Fetch an Activity from Strava. An activity is roughly Strava's
+        DetailedActivity model:
+          https://developers.strava.com/docs/reference/#api-models-DetailedActivity
+        """
         resp = self._read_raw_activity_by_id(activity_id)
         activity = StravaActivity(**resp)
         return activity
