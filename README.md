@@ -1,12 +1,18 @@
 # Strava to BigQuery Sync
 
-Sync Strava data to Google BigQuery using Strava's Webhooks.
+Sync Strava data to Google BigQuery using Strava's Webhooks. Currently, this function
+receives PubSub messages from a Push Subscription. The messages on that subscription
+come from a PubSub topic that is published from a Cloud Function that essentially
+only relays Strava Webhook messages to the PubSub topic. That project, `desire-lines`,
+will be open-sourced separately.
 
-This Cloud Function appends created (new) activities to an activities table. It also
-maintains a separate table that keeps track of the state of activies (e.g., updates
-and deletes). For updates, titles (and other attributes) can change. For deletes,
-deleted activities have their IDs logged so that a final view will give the current
-state of Strava Activities in an account.
+## Description
+
+This Cloud Function appends created (new) activities to an activities table. It will
+also maintain a separate table that will keep track of the state of activies (e.g.,
+updates and deletes). For updates, titles (and other attributes) can change. For
+deletes, deleted activities have their IDs logged so that a final view will give the
+current state of Strava Activities in an account.
 
 
 ```sql

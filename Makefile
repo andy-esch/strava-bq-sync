@@ -13,14 +13,14 @@ local:
 
 deploy:
 	gcloud functions deploy $(function_name) \
-		--project=$(project_id) \
-		--runtime=python311 \
-		--trigger-topic=$(GCP_PUBSUB_TOPIC) \
-		--region=us-central1 \
-		--gen2 \
-		--memory=1024MB \
-		--set-env-vars='GCP_PROJECT_ID=$(project_id)' \
-		--set-secrets='GH_TOKEN=projects/79853619583/secrets/GitHubToken:latest,STRAVA_CLIENT_ID=projects/79853619583/secrets/StravaClientID:latest,STRAVA_CLIENT_SECRET=projects/79853619583/secrets/StravaClientSecret:latest,STRAVA_REFRESH_TOKEN=projects/79853619583/secrets/StravaRefreshToken:latest'
+	  --project=$(project_id) \
+	  --runtime=python311 \
+	  --trigger-topic=$(GCP_PUBSUB_TOPIC) \
+	  --region=us-central1 \
+	  --gen2 \
+	  --memory=1024MB \
+	  --set-env-vars='GCP_PROJECT_ID=$(project_id)' \
+	  --set-secrets='GH_TOKEN=projects/79853619583/secrets/GitHubToken:latest,STRAVA_CLIENT_ID=projects/79853619583/secrets/StravaClientID:latest,STRAVA_CLIENT_SECRET=projects/79853619583/secrets/StravaClientSecret:latest,STRAVA_REFRESH_TOKEN=projects/79853619583/secrets/StravaRefreshToken:latest'
 
 
 create-webhook:
@@ -34,12 +34,12 @@ create-webhook:
 
 view-subscription:
 	curl \
-		-G https://www.strava.com/api/v3/push_subscriptions \
-		-d client_id=$$(gcloud secrets versions access latest --secret=StravaClientID) \
-		-d client_secret=$$(gcloud secrets versions access latest --secret=StravaClientSecret)
+	  -G https://www.strava.com/api/v3/push_subscriptions \
+	  -d client_id=$$(gcloud secrets versions access latest --secret=StravaClientID) \
+	  -d client_secret=$$(gcloud secrets versions access latest --secret=StravaClientSecret)
 
 
 delete-subscription:
 	curl \
-		-X DELETE \
-		"https://www.strava.com/api/v3/push_subscriptions/252940?client_id=$$(gcloud secrets versions access latest --secret=StravaClientID)&client_secret=$$(gcloud secrets versions access latest --secret=StravaClientSecret)"
+	  -X DELETE \
+	  "https://www.strava.com/api/v3/push_subscriptions/252940?client_id=$$(gcloud secrets versions access latest --secret=StravaClientID)&client_secret=$$(gcloud secrets versions access latest --secret=StravaClientSecret)"

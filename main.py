@@ -24,6 +24,7 @@ def stravabqsync_listener(event: CloudEvent) -> dict:
     if parsed_request.aspect_type == "create":
         usecase = make_sync_service()
         usecase.run(parsed_request.object_id)
+        logger.info("Finished processing event.")
     else:
         logger.info("Skipping non-create events: %s", parsed_request.updates)
 
