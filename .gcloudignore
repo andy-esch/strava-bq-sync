@@ -17,3 +17,12 @@ node_modules
 #!include:.gitignore
 #
 .env.local
+.flake8
+.github
+.pre-commit-config.yaml
+tests
+scripts
+README.md
+Makefile
+poetry.lock
+pyproject.toml
