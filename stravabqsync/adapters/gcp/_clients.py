@@ -10,6 +10,16 @@ class BigQueryClientWrapper:
         self.project_id = project_id
         self._client = Client(project=project_id)
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self._client.close()
+
+    def close(self):
+        """Explicitly close the BigQuery client"""
+        self._client.close()
+
     def insert_rows_json(
         self, rows: list[dict], *, dataset_name: str, table_name: str
     ) -> None:

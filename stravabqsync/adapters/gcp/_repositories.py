@@ -17,11 +17,12 @@ class WriteActivitiesRepo(WriteActivities):
 
     def write_activity(self, activity: StravaActivity) -> None:
         activities_dict = [json.loads(activity.model_dump_json())]
-        self._client.insert_rows_json(
-            activities_dict,
-            dataset_name=self._dataset_name,
-            table_name=self._table_name,
-        )
+        with self._client as client:
+            client.insert_rows_json(
+                activities_dict,
+                dataset_name=self._dataset_name,
+                table_name=self._table_name,
+            )
 
     def create_activities_table(self) -> None:
         table_id = f"{self._client.project_id}.{self._dataset_name}.{self._table_name}"
