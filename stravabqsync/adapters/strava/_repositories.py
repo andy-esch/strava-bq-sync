@@ -57,6 +57,7 @@ class StravaActivitiesRepo(ReadActivities):
             timeout=10,
         )
         if not resp.ok:
+            logger.error("Failed to fetch activity %s", activity_id)
             resp.raise_for_status()
         return resp.json()
 

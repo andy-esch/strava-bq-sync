@@ -48,6 +48,7 @@ def load_config() -> AppConfig:
     secrets_path = os.environ.get(
         "STRAVA_SECRETS_PATH", "/etc/secrets/strava_auth.json"
     )
+    strava_auth: dict[str, str] = {}
     if secrets_path and os.path.exists(secrets_path):
         with open(secrets_path, "r", encoding="utf-8") as fin:
             strava_auth = json.load(fin)
