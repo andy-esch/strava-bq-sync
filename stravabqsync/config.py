@@ -28,8 +28,21 @@ class AppConfig(NamedTuple):
     bq_dataset: str
 
 
-def load_config():
-    """Load secrets"""
+def load_config() -> AppConfig:
+    """Load application configuration from environment and dotenv files.
+
+    Loads configuration values from multiple sources in priority order:
+    1. .env.tests (base development variables)
+    2. Environment variables (override development variables)
+    3. .env.local (override everything for local development)
+
+    Returns:
+        AppConfig: Complete application configuration including Strava tokens
+                  and Google Cloud Platform settings.
+
+    Raises:
+        KeyError: If required environment variables are missing.
+    """
     config = {
         **dotenv_values(".env.tests"),  # load shared development variables
         **os.environ,  # override loaded values with environment variables
