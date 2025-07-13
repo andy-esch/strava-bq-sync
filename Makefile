@@ -1,10 +1,14 @@
-.PHONY: test local
+.PHONY: test local print
 
 function_name = stravabqsync_listener
 verify_token = desire-lines-cycling
 project_id = progressor-341702
-GCP_PUBSUB_TOPIC = "strava-webhook-events"
-GCP_BIGQUERY_DATASET = "strava"
+GCP_PUBSUB_TOPIC = strava-webhook-events
+GCP_BIGQUERY_DATASET = strava
+
+
+print:
+	echo '$(GCP_BIGQUERY_DATASET)'
 
 test:
 	poetry run pytest tests/
