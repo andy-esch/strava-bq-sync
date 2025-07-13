@@ -37,7 +37,7 @@ class StravaTokenRepo(ReadStravaToken):
                 access_token=access_token,
                 refresh_token=self._tokens.refresh_token,
             )
-        raise resp.raise_for_status()
+        resp.raise_for_status()
 
 
 class StravaActivitiesRepo(ReadActivities):
@@ -57,7 +57,7 @@ class StravaActivitiesRepo(ReadActivities):
             timeout=10,
         )
         if not resp.ok:
-            raise resp.raise_for_status()
+            resp.raise_for_status()
         return resp.json()
 
     def read_activity_by_id(self, activity_id: int) -> StravaActivity:

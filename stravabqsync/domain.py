@@ -70,7 +70,7 @@ class DetailedSegmentEffort(BaseModel):
     device_watts: bool | None = None
     average_watts: float | None = None
     segment: SummarySegment | None = None
-    kom_rank: int | None | None = None
+    kom_rank: int | None = None
     pr_rank: int | None
     hidden: bool | None = None
 

@@ -8,7 +8,7 @@ from dotenv import dotenv_values
 class StravaTokenSet(NamedTuple):
     """OAuth token set for Strava"""
 
-    client_id: str
+    client_id: int
     client_secret: str
     refresh_token: str
     access_token: str | None = None
@@ -33,6 +33,7 @@ def load_config():
     config = {
         **dotenv_values(".env.tests"),  # load shared development variables
         **os.environ,  # override loaded values with environment variables
+        # **strava_auth,
         **dotenv_values(".env.local"),
     }
 
