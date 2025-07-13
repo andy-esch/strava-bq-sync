@@ -1,4 +1,6 @@
 """Token loader"""
+
+import json
 import os
 from typing import NamedTuple
 
@@ -43,10 +45,16 @@ def load_config() -> AppConfig:
     Raises:
         KeyError: If required environment variables are missing.
     """
+    secrets_path = os.environ.get(
+        "STRAVA_SECRETS_PATH", "/etc/secrets/strava_auth.json"
+    )
+    if secrets_path and os.path.exists(secrets_path):
+        with open(secrets_path, "r", encoding="utf-8") as fin:
+            strava_auth = json.load(fin)
     config = {
         **dotenv_values(".env.tests"),  # load shared development variables
         **os.environ,  # override loaded values with environment variables
-        # **strava_auth,
+        **strava_auth,
         **dotenv_values(".env.local"),
     }
 
