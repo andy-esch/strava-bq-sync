@@ -11,15 +11,6 @@ class MockBigQueryClientWrapper(BigQueryClientWrapper):
         self.written_activities = None
         self.table_id = None
 
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        pass  # Mock doesn't need cleanup
-
-    def close(self):
-        pass  # Mock doesn't need cleanup
-
     def insert_rows_json(
         self, rows: list[dict], *, dataset_name: str, table_name: str
     ) -> None:

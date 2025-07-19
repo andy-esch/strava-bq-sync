@@ -10,16 +10,6 @@ class BigQueryClientWrapper:
         self.project_id = project_id
         self._client = Client(project=project_id)
 
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self._client.close()
-
-    def close(self):
-        """Explicitly close the BigQuery client"""
-        self._client.close()
-
     def insert_rows_json(
         self, rows: list[dict], *, dataset_name: str, table_name: str
     ) -> None:
@@ -32,7 +22,8 @@ class BigQueryClientWrapper:
             raise Exception(f"Error(s) from inserting data into BigQuery: {errors}")
         logger.info("Successfully inserted %s rows into %s.", len(rows), table_id)
 
-    def create_table(self, table_id: str, *, schema: list[SchemaField]):
+    def create_table(self, table_id: str, *, schema: list[SchemaField]) -> Table:
         """Create BigQuery table"""
         table = Table(table_id, schema=schema)
         table = self._client.create_table(table)
+        return table
