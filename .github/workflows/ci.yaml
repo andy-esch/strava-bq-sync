@@ -43,3 +43,6 @@ jobs:
 
     - name: Run tests
       run: poetry run pytest tests/
+
+    - name: Run mypy type checking
+      run: poetry run mypy stravabqsync/
