@@ -3,7 +3,7 @@
 import logging
 import time
 from functools import wraps
-from typing import Any, Callable, TypeVar
+from typing import Any, Callable, TypeVar, cast
 
 import requests
 
@@ -99,6 +99,6 @@ def retry_on_failure(
             if last_exception:
                 raise last_exception
 
-        return wrapper
+        return cast(F, wrapper)
 
     return decorator

@@ -1,5 +1,7 @@
 """Custom exceptions for stravabqsync application."""
 
+from typing import Sequence
+
 
 class StravaBqSyncError(Exception):
     """Base exception for all stravabqsync errors."""
@@ -52,9 +54,9 @@ class ActivityNotFoundError(StravaApiError):
 class BigQueryError(StravaBqSyncError):
     """Raised when BigQuery operations fail."""
 
-    def __init__(self, message: str, errors: list | None = None):
+    def __init__(self, message: str, errors: Sequence[dict] | None = None):
         super().__init__(message)
-        self.errors = errors or []
+        self.errors = list(errors) if errors else []
 
 
 class DataValidationError(StravaBqSyncError):
