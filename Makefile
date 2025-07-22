@@ -1,4 +1,4 @@
-.PHONY: test local print
+.PHONY: test local print lint format check-format mypy coverage check-all clean
 
 function_name = stravabqsync_listener
 verify_token = desire-lines-cycling
@@ -12,6 +12,29 @@ print:
 
 test:
 	poetry run pytest tests/
+
+# Coverage with human-readable output
+coverage:
+	poetry run pytest --cov=stravabqsync --cov-report=term-missing tests/
+
+# Linting
+lint:
+	poetry run ruff check stravabqsync/ tests/
+
+# Formatting
+format:
+	poetry run ruff format stravabqsync/ tests/
+
+# Check formatting without fixing
+check-format:
+	poetry run ruff format --check stravabqsync/ tests/
+
+# Type checking
+mypy:
+	poetry run mypy stravabqsync/
+
+# Run all checks (like CI)
+check-all: lint check-format mypy test
 
 local:
 	poetry run functions-framework --target $(function_name) --debug

@@ -21,6 +21,7 @@ coverage = "^7.3.4"
 ruff = "^0.12.4"
 mypy = "^1.17.0"
 types-requests = "^2.32.4.20250611"
+pytest-cov = "^6.2.1"
 
 
 [tool.poetry.group.ad-hoc.dependencies]
