@@ -3,7 +3,7 @@ name: Python package
 on:
   push:
     paths-ignore:
-      - '**/README.md'
+      - "**/README.md"
 
 env:
   GH_TOKEN: "foo"
@@ -13,36 +13,35 @@ env:
   GCP_PROJECT_ID: "foo-bar-baz"
   GCP_BIGQUERY_DATASET: "strava"
 
-
 jobs:
   build:
-
     runs-on: ubuntu-latest
+    name: CI
     steps:
-    - name: Checkout Desirelines App
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Install Poetry
-      run: |
-        pipx install poetry
-        poetry config virtualenvs.create true --local
-        poetry config virtualenvs.in-project true --local
-        poetry config installer.parallel true --local
+      - name: Install Poetry
+        run: |
+          pipx install poetry
+          poetry config virtualenvs.create true --local
+          poetry config virtualenvs.in-project true --local
+          poetry config installer.parallel true --local
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.11'
-        cache: 'poetry'
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "poetry"
 
-    - name: Install dependencies
-      run: poetry install --no-interaction --no-root
+      - name: Install dependencies
+        run: poetry install --no-interaction --no-root
 
-    - name: Install project
-      run: poetry install --no-interaction
+      - name: Install project
+        run: poetry install --no-interaction
 
-    - name: Run tests
-      run: poetry run pytest tests/
+      - name: Run tests
+        run: poetry run pytest tests/
 
-    - name: Run mypy type checking
-      run: poetry run mypy stravabqsync/
+      - name: Run mypy type checking
+        run: poetry run mypy stravabqsync/
