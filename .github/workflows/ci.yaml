@@ -40,6 +40,12 @@ jobs:
       - name: Install project
         run: poetry install --no-interaction
 
+      - name: Run ruff linting
+        run: poetry run ruff check stravabqsync/ tests/
+
+      - name: Run ruff formatting check
+        run: poetry run ruff format --check stravabqsync/ tests/
+
       - name: Run tests
         run: poetry run pytest tests/
 
