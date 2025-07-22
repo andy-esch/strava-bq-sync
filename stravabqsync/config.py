@@ -6,12 +6,16 @@ from typing import NamedTuple
 
 from dotenv import dotenv_values
 
+from stravabqsync.exceptions import ConfigurationError
+
 
 def _get_required_env_var(config: dict[str, str | None], key: str) -> str:
-    """Get required environment variable or raise KeyError with helpful message."""
+    """Get required environment variable or raise ConfigurationError with helpful
+    message.
+    """
     value = config.get(key)
     if value is None:
-        raise KeyError(f"{key} environment variable is required")
+        raise ConfigurationError(f"{key} environment variable is required")
     return value
 
 

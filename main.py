@@ -1,4 +1,5 @@
 """Test script for testing Strava webhooks"""
+
 import base64
 import json
 import logging

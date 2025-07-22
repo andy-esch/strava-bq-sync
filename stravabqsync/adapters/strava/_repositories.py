@@ -6,6 +6,11 @@ from typing import Any
 import requests
 
 from stravabqsync.domain import StravaActivity, StravaTokenSet
+from stravabqsync.exceptions import (
+    ActivityNotFoundError,
+    StravaApiError,
+    StravaTokenError,
+)
 from stravabqsync.ports.out.read import ReadActivities, ReadStravaToken
 
 logger = logging.getLogger(__name__)
@@ -29,7 +34,14 @@ class StravaTokenRepo(ReadStravaToken):
         resp = requests.post(url=self._url, data=payload, timeout=10)
 
         if not resp.ok:
-            resp.raise_for_status()
+            if resp.status_code == 401:
+                raise StravaTokenError(
+                    "Token refresh failed - check credentials", resp.status_code
+                )
+            else:
+                raise StravaApiError(
+                    f"Token refresh failed: {resp.text}", resp.status_code
+                )
 
         access_token = resp.json()["access_token"]
         logger.info("Tokens successfully updated")
@@ -58,8 +70,21 @@ class StravaActivitiesRepo(ReadActivities):
             timeout=10,
         )
         if not resp.ok:
-            logger.error("Failed to fetch activity %s", activity_id)
-            resp.raise_for_status()
+            logger.error(
+                "Failed to fetch activity %s: %s", activity_id, resp.status_code
+            )
+            if resp.status_code == 404:
+                raise ActivityNotFoundError(activity_id)
+            elif resp.status_code == 401:
+                raise StravaTokenError(
+                    "Access token expired", resp.status_code, activity_id
+                )
+            else:
+                raise StravaApiError(
+                    f"Failed to fetch activity {activity_id}: {resp.text}",
+                    resp.status_code,
+                    activity_id,
+                )
         return resp.json()
 
     def read_activity_by_id(self, activity_id: int) -> StravaActivity:
