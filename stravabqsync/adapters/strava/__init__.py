@@ -4,7 +4,8 @@ from stravabqsync.adapters.strava._repositories import (
     StravaActivitiesRepo,
     StravaTokenRepo,
 )
-from stravabqsync.config import StravaTokenSet, app_config
+from stravabqsync.config import app_config
+from stravabqsync.domain import StravaTokenSet
 from stravabqsync.ports.out.read import ReadActivities
 
 

@@ -10,7 +10,7 @@ python = "^3.11"
 pydantic = "^2.5.2"
 google-cloud-bigquery = "^3.14.1"
 python-dotenv = "^1.0.0"
-requests = "^2.31.0"
+requests = "^2.32.4"
 functions-framework = "^3.5.0"
 
 [tool.poetry.group.dev.dependencies]
@@ -19,6 +19,8 @@ pre-commit = "^3.6.0"
 requests-mock = "^1.11.0"
 coverage = "^7.3.4"
 ruff = "^0.12.4"
+mypy = "^1.17.0"
+types-requests = "^2.32.4.20250611"
 
 
 [tool.poetry.group.ad-hoc.dependencies]

@@ -7,6 +7,14 @@ from typing import NamedTuple
 from dotenv import dotenv_values
 
 
+def _get_required_env_var(config: dict[str, str | None], key: str) -> str:
+    """Get required environment variable or raise KeyError with helpful message."""
+    value = config.get(key)
+    if value is None:
+        raise KeyError(f"{key} environment variable is required")
+    return value
+
+
 class StravaTokenSet(NamedTuple):
     """OAuth token set for Strava"""
 
@@ -59,15 +67,22 @@ def load_config() -> AppConfig:
         **dotenv_values(".env.local"),
     }
 
+    # Validate required environment variables
+    client_id_str = _get_required_env_var(config, "STRAVA_CLIENT_ID")
+    refresh_token = _get_required_env_var(config, "STRAVA_REFRESH_TOKEN")
+    client_secret = _get_required_env_var(config, "STRAVA_CLIENT_SECRET")
+    project_id = _get_required_env_var(config, "GCP_PROJECT_ID")
+    bq_dataset = _get_required_env_var(config, "GCP_BIGQUERY_DATASET")
+
     loaded_tokens = StravaTokenSet(
-        client_id=config["STRAVA_CLIENT_ID"],
-        refresh_token=config["STRAVA_REFRESH_TOKEN"],
-        client_secret=config["STRAVA_CLIENT_SECRET"],
+        client_id=int(client_id_str),
+        refresh_token=refresh_token,
+        client_secret=client_secret,
     )
     app_config = AppConfig(
         tokens=loaded_tokens,
-        project_id=config["GCP_PROJECT_ID"],
-        bq_dataset=config["GCP_BIGQUERY_DATASET"],
+        project_id=project_id,
+        bq_dataset=bq_dataset,
     )
     return app_config
 
