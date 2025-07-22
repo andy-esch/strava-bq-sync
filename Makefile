@@ -1,10 +1,14 @@
-.PHONY: test local
+.PHONY: test local print
 
 function_name = stravabqsync_listener
 verify_token = desire-lines-cycling
 project_id = progressor-341702
-GCP_PUBSUB_TOPIC = "strava-webhook-events"
-GCP_BIGQUERY_DATASET = "strava"
+GCP_PUBSUB_TOPIC = strava-webhook-events
+GCP_BIGQUERY_DATASET = strava
+
+
+print:
+	echo '$(GCP_BIGQUERY_DATASET)'
 
 test:
 	poetry run pytest tests/
@@ -20,8 +24,8 @@ deploy:
 	  --region=us-central1 \
 	  --gen2 \
 	  --memory=1024MB \
-	  --set-env-vars='GCP_PROJECT_ID=$(project_id),GCP_BIGQUERY_DATASET=$(GCP_BIGQUERY_DATASET)' \
-	  --set-secrets='GH_TOKEN=projects/79853619583/secrets/GitHubToken:latest,STRAVA_CLIENT_ID=projects/79853619583/secrets/StravaClientID:latest,STRAVA_CLIENT_SECRET=projects/79853619583/secrets/StravaClientSecret:latest,STRAVA_REFRESH_TOKEN=projects/79853619583/secrets/StravaRefreshToken:latest'
+	  --set-env-vars='GCP_PROJECT_ID=$(project_id),GCP_BIGQUERY_DATASET=$(GCP_BIGQUERY_DATASET),STRAVA_SECRETS_PATH=/etc/secrets/strava_auth.json' \
+      --set-secrets='/etc/secrets:/strava_auth.json=StravaAuth:latest'
 
 
 create-webhook:

@@ -1,4 +1,6 @@
 """Token loader"""
+
+import json
 import os
 from typing import NamedTuple
 
@@ -8,7 +10,7 @@ from dotenv import dotenv_values
 class StravaTokenSet(NamedTuple):
     """OAuth token set for Strava"""
 
-    client_id: str
+    client_id: int
     client_secret: str
     refresh_token: str
     access_token: str | None = None
@@ -28,11 +30,32 @@ class AppConfig(NamedTuple):
     bq_dataset: str
 
 
-def load_config():
-    """Load secrets"""
+def load_config() -> AppConfig:
+    """Load application configuration from environment and dotenv files.
+
+    Loads configuration values from multiple sources in priority order:
+    1. .env.tests (base development variables)
+    2. Environment variables (override development variables)
+    3. .env.local (override everything for local development)
+
+    Returns:
+        AppConfig: Complete application configuration including Strava tokens
+                  and Google Cloud Platform settings.
+
+    Raises:
+        KeyError: If required environment variables are missing.
+    """
+    secrets_path = os.environ.get(
+        "STRAVA_SECRETS_PATH", "/etc/secrets/strava_auth.json"
+    )
+    strava_auth: dict[str, str] = {}
+    if secrets_path and os.path.exists(secrets_path):
+        with open(secrets_path, "r", encoding="utf-8") as fin:
+            strava_auth = json.load(fin)
     config = {
         **dotenv_values(".env.tests"),  # load shared development variables
         **os.environ,  # override loaded values with environment variables
+        **strava_auth,
         **dotenv_values(".env.local"),
     }
 

@@ -1,6 +1,6 @@
 """Strava read repositories"""
+
 import logging
-from functools import cached_property
 from typing import Any
 
 import requests
@@ -18,7 +18,7 @@ class StravaTokenRepo(ReadStravaToken):
         self._tokens = tokens
         self._url = "https://www.strava.com/oauth/token"
 
-    @cached_property
+    @property
     def refresh(self) -> StravaTokenSet:
         payload = {
             "client_id": self._tokens.client_id,
@@ -28,16 +28,17 @@ class StravaTokenRepo(ReadStravaToken):
         }
         resp = requests.post(url=self._url, data=payload, timeout=10)
 
-        if resp.ok:
-            access_token = resp.json()["access_token"]
-            logger.info("Tokens successfully updated")
-            return StravaTokenSet(
-                client_id=self._tokens.client_id,
-                client_secret=self._tokens.client_secret,
-                access_token=access_token,
-                refresh_token=self._tokens.refresh_token,
-            )
-        raise resp.raise_for_status()
+        if not resp.ok:
+            resp.raise_for_status()
+
+        access_token = resp.json()["access_token"]
+        logger.info("Tokens successfully updated")
+        return StravaTokenSet(
+            client_id=self._tokens.client_id,
+            client_secret=self._tokens.client_secret,
+            access_token=access_token,
+            refresh_token=self._tokens.refresh_token,
+        )
 
 
 class StravaActivitiesRepo(ReadActivities):
@@ -57,7 +58,8 @@ class StravaActivitiesRepo(ReadActivities):
             timeout=10,
         )
         if not resp.ok:
-            raise resp.raise_for_status()
+            logger.error("Failed to fetch activity %s", activity_id)
+            resp.raise_for_status()
         return resp.json()
 
     def read_activity_by_id(self, activity_id: int) -> StravaActivity:

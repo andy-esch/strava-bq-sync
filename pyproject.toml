@@ -14,10 +14,11 @@ requests = "^2.31.0"
 functions-framework = "^3.5.0"
 
 [tool.poetry.group.dev.dependencies]
-flake8 = "^6.1.0"
 pytest = "^7.4.3"
 pre-commit = "^3.6.0"
 requests-mock = "^1.11.0"
+coverage = "^7.3.4"
+ruff = "^0.12.4"
 
 
 [tool.poetry.group.ad-hoc.dependencies]
@@ -27,3 +28,25 @@ pandas = "^2.1.4"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+# Same as Black's line length
+line-length = 88
+
+# Enable common rule sets
+lint.select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # Pyflakes
+    "I",  # isort
+]
+
+# Ignore specific rules if needed
+lint.ignore = []
+
+# Exclude files/directories
+exclude = [
+    ".git",
+    "__pycache__",
+    ".venv",
+]

@@ -19,10 +19,11 @@ class BigQueryClientWrapper:
         table_id = f"{self.project_id}.{dataset_name}.{table_name}"
         errors = self._client.insert_rows_json(table_id, rows)
         if len(errors) > 0:
-            raise Exception("Error(s) from inserting data into BigQuery: %s", errors)
+            raise Exception(f"Error(s) from inserting data into BigQuery: {errors}")
         logger.info("Successfully inserted %s rows into %s.", len(rows), table_id)
 
-    def create_table(self, table_id: str, *, schema: list[SchemaField]):
+    def create_table(self, table_id: str, *, schema: list[SchemaField]) -> Table:
         """Create BigQuery table"""
         table = Table(table_id, schema=schema)
         table = self._client.create_table(table)
+        return table

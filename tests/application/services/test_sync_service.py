@@ -50,4 +50,4 @@ def service():
 class TestSyncService:
     def test_usage(self, service, activity):
         service.run(activity)
-        assert service._write_activities().activity.id == 8726373550
+        assert service._write_activities.activity.id == 8726373550

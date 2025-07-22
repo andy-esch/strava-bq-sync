@@ -14,5 +14,5 @@ def make_bigquery_client_wrapper() -> BigQueryClientWrapper:
 @lru_cache(maxsize=1)
 def make_write_activities() -> WriteActivities:
     return WriteActivitiesRepo(
-        make_bigquery_client_wrapper(), dataset_name=app_config.bq_dataset
+        client=make_bigquery_client_wrapper(), dataset_name=app_config.bq_dataset
     )
