@@ -1,5 +1,3 @@
-import json
-
 from google.cloud.bigquery import SchemaField
 
 from stravabqsync.adapters.gcp._clients import BigQueryClientWrapper
@@ -16,7 +14,7 @@ class WriteActivitiesRepo(WriteActivities):
         self._table_name = "activities"
 
     def write_activity(self, activity: StravaActivity) -> None:
-        activities_dict = [json.loads(activity.model_dump_json())]
+        activities_dict = [activity.model_dump()]
         self._client.insert_rows_json(
             activities_dict,
             dataset_name=self._dataset_name,
