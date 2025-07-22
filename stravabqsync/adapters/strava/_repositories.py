@@ -12,6 +12,7 @@ from stravabqsync.exceptions import (
     StravaTokenError,
 )
 from stravabqsync.ports.out.read import ReadActivities, ReadStravaToken
+from stravabqsync.retry import retry_on_failure
 
 logger = logging.getLogger(__name__)
 
@@ -24,6 +25,7 @@ class StravaTokenRepo(ReadStravaToken):
         self._url = "https://www.strava.com/oauth/token"
 
     @property
+    @retry_on_failure(max_attempts=2, backoff_seconds=0.5)
     def refresh(self) -> StravaTokenSet:
         payload = {
             "client_id": self._tokens.client_id,
@@ -63,6 +65,7 @@ class StravaActivitiesRepo(ReadActivities):
             "https://www.strava.com/api/v3/activities/{activity_id}"
         )
 
+    @retry_on_failure(max_attempts=3, backoff_seconds=1.0)
     def _read_raw_activity_by_id(self, activity_id: int) -> dict[str, Any]:
         resp = requests.get(
             url=self._activity_endpoint.format(activity_id=activity_id),
