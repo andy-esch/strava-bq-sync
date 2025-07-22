@@ -47,9 +47,8 @@ def retry_on_failure(
                             retry_after = int(e.response.headers.get("Retry-After", 60))
                             if attempt == max_attempts - 1:
                                 raise StravaRateLimitError(
-                                    f"Rate limit exceeded after {
-                                        max_attempts
-                                    } attempts",
+                                    f"Rate limit exceeded after {max_attempts} "
+                                    "attempts",
                                     retry_after=retry_after,
                                 )
                             logger.warning(

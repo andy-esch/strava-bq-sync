@@ -1,7 +1,6 @@
 import json
 
 import pytest
-from requests.exceptions import HTTPError
 from requests_mock import Mocker
 
 from stravabqsync.adapters.strava._repositories import (
@@ -9,6 +8,7 @@ from stravabqsync.adapters.strava._repositories import (
     StravaTokenRepo,
 )
 from stravabqsync.domain import StravaActivity, StravaTokenSet
+from stravabqsync.exceptions import ActivityNotFoundError, StravaTokenError
 
 
 @pytest.fixture
@@ -47,7 +47,7 @@ class TestStravaTokenRepo:
         with Mocker() as m:
             m.post(token_repo._url, status_code=401)
 
-            with pytest.raises(HTTPError):
+            with pytest.raises(StravaTokenError):
                 token_repo.refresh
 
 
@@ -81,5 +81,5 @@ class TestStravaActivitiesRepo:
                 activities_repo._activity_endpoint.format(activity_id=activity_id),
                 status_code=404,
             )
-            with pytest.raises(HTTPError):
+            with pytest.raises(ActivityNotFoundError):
                 _ = activities_repo.read_activity_by_id(activity_id)
