@@ -6,6 +6,7 @@ from typing import NamedTuple
 
 from dotenv import dotenv_values
 
+from stravabqsync.domain import StravaTokenSet
 from stravabqsync.exceptions import ConfigurationError
 
 
@@ -17,15 +18,6 @@ def _get_required_env_var(config: dict[str, str | None], key: str) -> str:
     if value is None:
         raise ConfigurationError(f"{key} environment variable is required")
     return value
-
-
-class StravaTokenSet(NamedTuple):
-    """OAuth token set for Strava"""
-
-    client_id: int
-    client_secret: str
-    refresh_token: str
-    access_token: str | None = None
 
 
 class StravaApiConfig(NamedTuple):
@@ -94,8 +86,9 @@ def load_config() -> AppConfig:
 
     loaded_tokens = StravaTokenSet(
         client_id=int(client_id_str),
-        refresh_token=refresh_token,
         client_secret=client_secret,
+        access_token="",  # Will be refreshed on first use
+        refresh_token=refresh_token,
     )
     app_config = AppConfig(
         tokens=loaded_tokens,
