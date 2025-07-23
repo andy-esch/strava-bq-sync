@@ -28,6 +28,18 @@ class StravaTokenSet(NamedTuple):
     access_token: str | None = None
 
 
+class StravaApiConfig(NamedTuple):
+    """Strava API configuration"""
+
+    token_url: str = "https://www.strava.com/oauth/token"
+    api_base_url: str = "https://www.strava.com/api/v3"
+    request_timeout: int = 10
+    token_retry_attempts: int = 2
+    token_retry_backoff: float = 0.5
+    activity_retry_attempts: int = 3
+    activity_retry_backoff: float = 1.0
+
+
 class AppConfig(NamedTuple):
     """Strava-bq-sync application configuration
 
@@ -35,11 +47,13 @@ class AppConfig(NamedTuple):
       tokens: StravaTokenSet
       project_id: GCP Project ID
       bq_dataset: GCP BigQuery Dataset where tables will be stored
+      strava_api: StravaApiConfig
     """
 
     tokens: StravaTokenSet
     project_id: str
     bq_dataset: str
+    strava_api: StravaApiConfig
 
 
 def load_config() -> AppConfig:
@@ -87,6 +101,7 @@ def load_config() -> AppConfig:
         tokens=loaded_tokens,
         project_id=project_id,
         bq_dataset=bq_dataset,
+        strava_api=StravaApiConfig(),
     )
     return app_config
 
