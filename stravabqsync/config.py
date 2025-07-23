@@ -1,6 +1,7 @@
 """Token loader"""
 
 import json
+import logging
 import os
 from typing import NamedTuple
 
@@ -8,6 +9,8 @@ from dotenv import dotenv_values
 
 from stravabqsync.domain import StravaTokenSet
 from stravabqsync.exceptions import ConfigurationError
+
+logger = logging.getLogger(__name__)
 
 
 def _get_required_env_var(config: dict[str, str | None], key: str) -> str:
@@ -61,15 +64,23 @@ def load_config() -> AppConfig:
                   and Google Cloud Platform settings.
 
     Raises:
-        KeyError: If required environment variables are missing.
+        ConfigurationError: If required environment variables are missing.
     """
     secrets_path = os.environ.get(
         "STRAVA_SECRETS_PATH", "/etc/secrets/strava_auth.json"
     )
     strava_auth: dict[str, str] = {}
     if secrets_path and os.path.exists(secrets_path):
-        with open(secrets_path, "r", encoding="utf-8") as fin:
-            strava_auth = json.load(fin)
+        try:
+            with open(secrets_path, "r", encoding="utf-8") as fin:
+                strava_auth = json.load(fin)
+                # Validate that it's a dictionary
+                if not isinstance(strava_auth, dict):
+                    raise ValueError("Secrets file must contain a JSON object")
+                logger.info("Successfully loaded secrets from %s", secrets_path)
+        except (json.JSONDecodeError, OSError, ValueError) as e:
+            logger.warning("Could not load secrets file %s: %s", secrets_path, e)
+            strava_auth = {}
     config = {
         **dotenv_values(".env.tests"),  # load shared development variables
         **os.environ,  # override loaded values with environment variables

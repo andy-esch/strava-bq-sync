@@ -134,3 +134,109 @@ class TestLoadConfig:
         config = load_config()
         assert config.tokens.client_id == 123
         assert config.tokens.client_secret == "secret"
+
+    @patch("stravabqsync.config.dotenv_values")
+    @patch.dict(
+        os.environ,
+        {
+            "STRAVA_CLIENT_ID": "123",
+            "STRAVA_CLIENT_SECRET": "secret",
+            "STRAVA_REFRESH_TOKEN": "refresh",
+            "GCP_PROJECT_ID": "project",
+            "GCP_BIGQUERY_DATASET": "dataset",
+        },
+        clear=True,
+    )
+    def test_load_config_invalid_json_file(self, mock_dotenv_values):
+        # Test that invalid JSON doesn't crash config loading
+        mock_dotenv_values.return_value = {}
+
+        with tempfile.NamedTemporaryFile(
+            mode="w", suffix=".json", delete=False
+        ) as temp_file:
+            # Write invalid JSON
+            temp_file.write("{ invalid json")
+            temp_file.flush()
+
+            try:
+                with patch.dict(
+                    os.environ, {"STRAVA_SECRETS_PATH": temp_file.name}, clear=False
+                ):
+                    config = load_config()
+                    # Should still work with env vars despite invalid JSON
+                    assert config.tokens.client_id == 123
+                    assert config.tokens.client_secret == "secret"
+            finally:
+                os.unlink(temp_file.name)
+
+    @patch("stravabqsync.config.dotenv_values")
+    @patch.dict(
+        os.environ,
+        {
+            "STRAVA_CLIENT_ID": "123",
+            "STRAVA_CLIENT_SECRET": "secret",
+            "STRAVA_REFRESH_TOKEN": "refresh",
+            "GCP_PROJECT_ID": "project",
+            "GCP_BIGQUERY_DATASET": "dataset",
+        },
+        clear=True,
+    )
+    def test_load_config_non_dict_json_file(self, mock_dotenv_values):
+        # Test that JSON array/string doesn't crash config loading
+        mock_dotenv_values.return_value = {}
+
+        with tempfile.NamedTemporaryFile(
+            mode="w", suffix=".json", delete=False
+        ) as temp_file:
+            # Write valid JSON but not a dictionary
+            json.dump(["not", "a", "dictionary"], temp_file)
+            temp_file.flush()
+
+            try:
+                with patch.dict(
+                    os.environ, {"STRAVA_SECRETS_PATH": temp_file.name}, clear=False
+                ):
+                    config = load_config()
+                    # Should still work with env vars despite non-dict JSON
+                    assert config.tokens.client_id == 123
+                    assert config.tokens.client_secret == "secret"
+            finally:
+                os.unlink(temp_file.name)
+
+    @patch("stravabqsync.config.dotenv_values")
+    @patch.dict(
+        os.environ,
+        {
+            "STRAVA_CLIENT_ID": "123",
+            "STRAVA_CLIENT_SECRET": "secret",
+            "STRAVA_REFRESH_TOKEN": "refresh",
+            "GCP_PROJECT_ID": "project",
+            "GCP_BIGQUERY_DATASET": "dataset",
+        },
+        clear=True,
+    )
+    def test_load_config_permission_denied_secrets_file(self, mock_dotenv_values):
+        # Test that permission errors don't crash config loading
+        mock_dotenv_values.return_value = {}
+
+        with tempfile.NamedTemporaryFile(
+            mode="w", suffix=".json", delete=False
+        ) as temp_file:
+            json.dump({"test": "data"}, temp_file)
+            temp_file.flush()
+
+            try:
+                # Remove read permissions
+                os.chmod(temp_file.name, 0o000)
+
+                with patch.dict(
+                    os.environ, {"STRAVA_SECRETS_PATH": temp_file.name}, clear=False
+                ):
+                    config = load_config()
+                    # Should still work with env vars despite permission error
+                    assert config.tokens.client_id == 123
+                    assert config.tokens.client_secret == "secret"
+            finally:
+                # Restore permissions before cleanup
+                os.chmod(temp_file.name, 0o644)
+                os.unlink(temp_file.name)
