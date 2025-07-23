@@ -17,6 +17,8 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     name: Lint
+    strategy:
+      fail-fast: true
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -56,6 +58,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
     name: Test
+    strategy:
+      fail-fast: true
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -99,6 +103,8 @@ jobs:
   typecheck:
     runs-on: ubuntu-latest
     name: Type Check
+    strategy:
+      fail-fast: true
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
