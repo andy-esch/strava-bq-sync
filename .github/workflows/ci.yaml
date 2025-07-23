@@ -14,9 +14,9 @@ env:
   GCP_BIGQUERY_DATASET: "strava"
 
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
-    name: CI
+    name: Lint
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -45,9 +45,6 @@ jobs:
             poetry-${{ runner.os }}-
 
       - name: Install dependencies
-        run: poetry install --no-interaction --no-root
-
-      - name: Install project
         run: poetry install --no-interaction
 
       - name: Run ruff linting
@@ -55,6 +52,39 @@ jobs:
 
       - name: Run ruff formatting check
         run: poetry run ruff format --check stravabqsync/ tests/
+
+  test:
+    runs-on: ubuntu-latest
+    name: Test
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Poetry
+        run: |
+          pipx install poetry
+          poetry config virtualenvs.create true --local
+          poetry config virtualenvs.in-project true --local
+          poetry config installer.parallel true --local
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "poetry"
+
+      - name: Cache Poetry dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/pypoetry
+            .venv
+          key: poetry-${{ runner.os }}-${{ hashFiles('poetry.lock') }}
+          restore-keys: |
+            poetry-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: poetry install --no-interaction
 
       - name: Run tests with coverage
         run: poetry run pytest --cov=stravabqsync --cov-report=xml --cov-report=term tests/
@@ -65,6 +95,39 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./coverage.xml
           fail_ci_if_error: true
+
+  typecheck:
+    runs-on: ubuntu-latest
+    name: Type Check
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Poetry
+        run: |
+          pipx install poetry
+          poetry config virtualenvs.create true --local
+          poetry config virtualenvs.in-project true --local
+          poetry config installer.parallel true --local
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "poetry"
+
+      - name: Cache Poetry dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/pypoetry
+            .venv
+          key: poetry-${{ runner.os }}-${{ hashFiles('poetry.lock') }}
+          restore-keys: |
+            poetry-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: poetry install --no-interaction
 
       - name: Run mypy type checking
         run: poetry run mypy stravabqsync/
