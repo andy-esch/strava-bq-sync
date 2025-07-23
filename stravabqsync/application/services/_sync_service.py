@@ -16,7 +16,7 @@ class SyncService:
         read_activities: Callable[[StravaTokenSet], ReadActivities],
         write_activities: Supplier[WriteActivities],
     ):
-        self._tokens = read_strava_token().refresh
+        self._tokens = read_strava_token().refresh()
         self._read_activities = read_activities(self._tokens)
         self._write_activities = write_activities()
 

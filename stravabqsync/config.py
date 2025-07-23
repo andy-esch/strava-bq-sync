@@ -6,22 +6,30 @@ from typing import NamedTuple
 
 from dotenv import dotenv_values
 
+from stravabqsync.domain import StravaTokenSet
+from stravabqsync.exceptions import ConfigurationError
+
 
 def _get_required_env_var(config: dict[str, str | None], key: str) -> str:
-    """Get required environment variable or raise KeyError with helpful message."""
+    """Get required environment variable or raise ConfigurationError with helpful
+    message.
+    """
     value = config.get(key)
     if value is None:
-        raise KeyError(f"{key} environment variable is required")
+        raise ConfigurationError(f"{key} environment variable is required")
     return value
 
 
-class StravaTokenSet(NamedTuple):
-    """OAuth token set for Strava"""
+class StravaApiConfig(NamedTuple):
+    """Strava API configuration"""
 
-    client_id: int
-    client_secret: str
-    refresh_token: str
-    access_token: str | None = None
+    token_url: str = "https://www.strava.com/oauth/token"
+    api_base_url: str = "https://www.strava.com/api/v3"
+    request_timeout: int = 10
+    token_retry_attempts: int = 2
+    token_retry_backoff: float = 0.5
+    activity_retry_attempts: int = 3
+    activity_retry_backoff: float = 1.0
 
 
 class AppConfig(NamedTuple):
@@ -31,11 +39,13 @@ class AppConfig(NamedTuple):
       tokens: StravaTokenSet
       project_id: GCP Project ID
       bq_dataset: GCP BigQuery Dataset where tables will be stored
+      strava_api: StravaApiConfig
     """
 
     tokens: StravaTokenSet
     project_id: str
     bq_dataset: str
+    strava_api: StravaApiConfig
 
 
 def load_config() -> AppConfig:
@@ -76,13 +86,15 @@ def load_config() -> AppConfig:
 
     loaded_tokens = StravaTokenSet(
         client_id=int(client_id_str),
-        refresh_token=refresh_token,
         client_secret=client_secret,
+        access_token="",  # Will be refreshed on first use
+        refresh_token=refresh_token,
     )
     app_config = AppConfig(
         tokens=loaded_tokens,
         project_id=project_id,
         bq_dataset=bq_dataset,
+        strava_api=StravaApiConfig(),
     )
     return app_config
 

@@ -2,6 +2,8 @@ import logging
 
 from google.cloud.bigquery import Client, SchemaField, Table
 
+from stravabqsync.exceptions import BigQueryError
+
 logger = logging.getLogger(__name__)
 
 
@@ -19,7 +21,9 @@ class BigQueryClientWrapper:
         table_id = f"{self.project_id}.{dataset_name}.{table_name}"
         errors = self._client.insert_rows_json(table_id, rows)
         if len(errors) > 0:
-            raise Exception(f"Error(s) from inserting data into BigQuery: {errors}")
+            raise BigQueryError(
+                f"Failed to insert {len(rows)} rows into {table_id}", errors
+            )
         logger.info("Successfully inserted %s rows into %s.", len(rows), table_id)
 
     def create_table(self, table_id: str, *, schema: list[SchemaField]) -> Table:
