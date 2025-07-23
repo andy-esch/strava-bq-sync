@@ -40,7 +40,7 @@ class TestStravaTokenRepo:
     def test_refresh(self, token_repo):
         with Mocker() as m:
             m.post(token_repo._url, json={"access_token": "baz"})
-            expected = token_repo.refresh
+            expected = token_repo.refresh()
             assert expected.access_token == "baz"
 
     def test_failed_request(self, token_repo):
@@ -48,7 +48,7 @@ class TestStravaTokenRepo:
             m.post(token_repo._url, status_code=401)
 
             with pytest.raises(StravaTokenError):
-                token_repo.refresh
+                token_repo.refresh()
 
 
 class TestStravaActivitiesRepo:

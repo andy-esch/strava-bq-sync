@@ -9,7 +9,6 @@ from stravabqsync.domain import StravaActivity, StravaTokenSet
 class ReadStravaToken(ABC):
     """Read Strava access token"""
 
-    @property
     @abstractmethod
     def refresh(self) -> StravaTokenSet:
         """Generate a new Strava refresh token"""

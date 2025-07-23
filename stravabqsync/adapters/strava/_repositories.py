@@ -24,7 +24,6 @@ class StravaTokenRepo(ReadStravaToken):
         self._tokens = tokens
         self._url = "https://www.strava.com/oauth/token"
 
-    @property
     @retry_on_failure(max_attempts=2, backoff_seconds=0.5)
     def refresh(self) -> StravaTokenSet:
         payload = {

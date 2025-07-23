@@ -6,6 +6,5 @@ class MockStravaTokenRepo(ReadStravaToken):
     def __init__(self, token: StravaTokenSet):
         self.token = token
 
-    @property
     def refresh(self):
         return self.token
