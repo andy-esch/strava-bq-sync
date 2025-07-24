@@ -69,6 +69,8 @@ class StravaActivitiesRepo(ReadActivities):
     """Repository for fetching Strava Activities"""
 
     def __init__(self, tokens: StravaTokenSet, api_config: StravaApiConfig):
+        # TODO: Document adapter-specific api_config parameter properly.
+        # This adapter extends the port interface with additional configuration.
         self._tokens = tokens
         self._api_config = api_config
         self._headers = {"Authorization": f"Bearer {self._tokens.access_token}"}

@@ -208,6 +208,12 @@ class StravaActivity(BaseModel):
 
 
 class StravaTokenSet(NamedTuple):
+    """OAuth token set for Strava API authentication.
+
+    Contains all necessary credentials for authenticating with Strava's API
+    and refreshing access tokens when they expire.
+    """
+
     client_id: int
     client_secret: str
     access_token: str
@@ -215,4 +221,6 @@ class StravaTokenSet(NamedTuple):
 
 
 class GitHubTokenSet(NamedTuple):
+    """OAuth token set for GitHub API authentication."""
+
     github: str
