@@ -16,6 +16,17 @@ class SyncService:
         read_activities: Callable[[StravaTokenSet], ReadActivities],
         write_activities: Supplier[WriteActivities],
     ):
+        """Initialize the sync service with required dependencies.
+
+        Args:
+            read_strava_token: Factory function for token refresh service.
+            read_activities: Factory function for activity reading service.
+            write_activities: Factory function for activity writing service.
+
+        Raises:
+            StravaTokenError: If initial token refresh fails.
+            StravaApiError: If token refresh API call fails.
+        """
         self._tokens = read_strava_token().refresh()
         self._read_activities = read_activities(self._tokens)
         self._write_activities = write_activities()
